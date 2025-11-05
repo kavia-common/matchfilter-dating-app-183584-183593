@@ -22,9 +22,9 @@ void main() {
 
     final prefs = FilterPreferences(
       preference: 'Serious',
-      ethnicity: 'asian',
-      race: 'white',
-      hairColor: HairColor.brunette,
+      ethnicity: const ['asian'],
+      race: const ['white'],
+      hairColor: const [HairColor.brunette],
     );
 
     await repo.fetchMatches(prefs);
@@ -43,7 +43,7 @@ void main() {
     final prefs = FilterPreferences(
       preference: '   ', // trimmed empty
       ethnicity: null,
-      race: 'white',
+      race: const ['white'],
       hairColor: null,
     );
 
@@ -52,6 +52,45 @@ void main() {
     expect(mock.lastQuery!.containsKey('pref'), isFalse);
     expect(mock.lastQuery!.containsKey('eth'), isFalse);
     expect(mock.lastQuery!['race'], 'white');
+    expect(mock.lastQuery!.containsKey('hair'), isFalse);
+  });
+
+  test('Repository CSV encodes multiple selections', () async {
+    final mock = _CapturingMockService();
+    final repo = MatchRepository(mock);
+
+    final prefs = FilterPreferences(
+      preference: 'Casual',
+      ethnicity: const ['asian', 'mena'],
+      race: const ['white', 'two_or_more'],
+      hairColor: const [HairColor.blonde, HairColor.dyed],
+    );
+
+    await repo.fetchMatches(prefs);
+
+    expect(mock.lastQuery, isNotNull);
+    expect(mock.lastQuery!['pref'], 'Casual');
+    expect(mock.lastQuery!['eth'], 'asian,mena');
+    expect(mock.lastQuery!['race'], 'white,two_or_more');
+    expect(mock.lastQuery!['hair'], 'blonde,dyed');
+  });
+
+  test('Repository omits keys when lists empty or only empty strings', () async {
+    final mock = _CapturingMockService();
+    final repo = MatchRepository(mock);
+
+    final prefs = FilterPreferences(
+      preference: null,
+      ethnicity: const ['', '   '], // empties should be ignored -> omit key
+      race: const <String>[], // empty -> omit key
+      hairColor: const <HairColor>[], // empty -> omit key
+    );
+
+    await repo.fetchMatches(prefs);
+
+    expect(mock.lastQuery, isNotNull);
+    expect(mock.lastQuery!.containsKey('eth'), isFalse);
+    expect(mock.lastQuery!.containsKey('race'), isFalse);
     expect(mock.lastQuery!.containsKey('hair'), isFalse);
   });
 
