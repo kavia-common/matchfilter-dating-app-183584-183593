@@ -3,16 +3,40 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:dating_app_frontend/main.dart';
 
 void main() {
-  testWidgets('App generation message displayed', (WidgetTester tester) async {
+  testWidgets('Filters page renders and shows preference field',
+      (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
+    // App bar title for Filters
+    expect(find.text('Filters'), findsOneWidget);
 
-    expect(find.text('dating_app_frontend App is being generated...'), findsOneWidget);
-    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+    // Preference field exists
+    final prefField = find.byKey(const Key('preference_textfield'));
+    expect(prefField, findsOneWidget);
+
+    // Ethnicity and race dropdowns exist
+    expect(find.byKey(const Key('ethnicity_dropdown')), findsOneWidget);
+    expect(find.byKey(const Key('race_dropdown')), findsOneWidget);
+
+    // Hair color chips exist
+    expect(find.byKey(const Key('hair_blonde_chip')), findsOneWidget);
+    expect(find.byKey(const Key('hair_brunette_chip')), findsOneWidget);
+    expect(find.byKey(const Key('hair_dyed_chip')), findsOneWidget);
   });
 
-  testWidgets('App bar has correct title', (WidgetTester tester) async {
+  testWidgets('Apply and Clear buttons work', (WidgetTester tester) async {
     await tester.pumpWidget(const MyApp());
 
-    expect(find.text('dating_app_frontend'), findsOneWidget);
+    // Type into preference
+    await tester.enterText(
+        find.byKey(const Key('preference_textfield')), 'Casual');
+    await tester.pump();
+
+    // Tap Apply
+    await tester.tap(find.byKey(const Key('apply_filters_button')));
+    await tester.pump();
+
+    // Tap Clear
+    await tester.tap(find.byKey(const Key('clear_filters_button')));
+    await tester.pump();
   });
 }
