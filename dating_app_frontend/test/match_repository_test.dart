@@ -30,10 +30,10 @@ void main() {
     await repo.fetchMatches(prefs);
 
     expect(mock.lastQuery, isNotNull);
-    expect(mock.lastQuery!['preference'], 'Serious');
-    expect(mock.lastQuery!['ethnicity'], 'asian');
+    expect(mock.lastQuery!['pref'], 'Serious');
+    expect(mock.lastQuery!['eth'], 'asian');
     expect(mock.lastQuery!['race'], 'white');
-    expect(mock.lastQuery!['hair_color'], 'brunette');
+    expect(mock.lastQuery!['hair'], 'brunette');
   });
 
   test('Repository omits empty/null fields from query', () async {
@@ -49,17 +49,17 @@ void main() {
 
     await repo.fetchMatches(prefs);
     expect(mock.lastQuery, isNotNull);
-    expect(mock.lastQuery!.containsKey('preference'), isFalse);
-    expect(mock.lastQuery!.containsKey('ethnicity'), isFalse);
+    expect(mock.lastQuery!.containsKey('pref'), isFalse);
+    expect(mock.lastQuery!.containsKey('eth'), isFalse);
     expect(mock.lastQuery!['race'], 'white');
-    expect(mock.lastQuery!.containsKey('hair_color'), isFalse);
+    expect(mock.lastQuery!.containsKey('hair'), isFalse);
   });
 
   test('Mock service returns deterministic results', () async {
     final service = MockMatchService();
-    final items = await service.fetchMatches({'ethnicity': 'asian', 'hair_color': 'blonde'});
+    final items = await service.fetchMatches({'eth': 'asian', 'hair': 'blonde'});
     expect(items.length, 3);
-    expect(items.first.name.contains('ethnicity:asian'), isTrue);
-    expect(items.first.name.contains('hair_color:blonde'), isTrue);
+    expect(items.first.name.contains('eth:asian'), isTrue);
+    expect(items.first.name.contains('hair:blonde'), isTrue);
   });
 }
