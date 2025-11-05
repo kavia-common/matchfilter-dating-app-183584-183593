@@ -31,6 +31,29 @@ void main() {
         find.byKey(const Key('preference_textfield')), 'Casual');
     await tester.pump();
 
+    // Open ethnicity dropdown and check curated options visible
+    await tester.tap(find.byKey(const Key('ethnicity_dropdown')));
+    await tester.pumpAndSettle();
+    expect(find.text('Asian'), findsWidgets);
+    expect(find.text('Black/African'), findsWidgets);
+    expect(find.text('White/European'), findsWidgets);
+
+    // Select one option
+    await tester.tap(find.text('Asian').last);
+    await tester.pumpAndSettle();
+
+    // Open race dropdown and check curated options visible
+    await tester.tap(find.byKey(const Key('race_dropdown')));
+    await tester.pumpAndSettle();
+    expect(find.text('American Indian or Alaska Native'), findsWidgets);
+    expect(find.text('Black or African American'), findsWidgets);
+    expect(find.text('Native Hawaiian or Other Pacific Islander'), findsWidgets);
+    expect(find.text('Two or More Races'), findsWidgets);
+
+    // Select one option
+    await tester.tap(find.text('White').last);
+    await tester.pumpAndSettle();
+
     // Tap Apply
     await tester.tap(find.byKey(const Key('apply_filters_button')));
     await tester.pump();
