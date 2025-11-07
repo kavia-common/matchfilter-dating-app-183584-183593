@@ -11,7 +11,7 @@ class _TestApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       routes: {
-        '/': (_) => const MatchesScreen(),
+        '/': (_) => MatchesScreen(),
         '/chat': (_) => const ChatScreen(),
       },
     );

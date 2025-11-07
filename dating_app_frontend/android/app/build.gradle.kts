@@ -8,7 +8,8 @@ plugins {
 android {
     namespace = "com.example.dating_app_frontend"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    // Pin NDK version to satisfy shared_preferences_android and sqflite_android
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
